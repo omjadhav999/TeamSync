@@ -51,7 +51,7 @@ passport.use(
       passwordField: "password",
       session: true,
     },
-    async (email, password, done) => {
+    async (email: string, password: string, done: Function) => {
       try {
         const user = await verifyUserService({ email, password });
         return done(null, user);
@@ -65,11 +65,11 @@ passport.use(
 // passport.serializeUser((user: any, done) => done(null, user));
 // passport.deserializeUser((user: any, done) => done(null, user));
 
-passport.serializeUser((user: any, done) => {
+passport.serializeUser((user: any, done: Function) => {
   done(null, (user as any)._id); // store only user id in session
 });
 
-passport.deserializeUser(async (id: string, done) => {
+passport.deserializeUser(async (id: string, done: Function) => {
   try {
     const user = await User.findById(id).select("-password"); 
     if (!user) {
