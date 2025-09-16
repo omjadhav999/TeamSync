@@ -9,6 +9,7 @@ import {
   loginOrCreateAccountService,
   verifyUserService,
 } from "../services/auth.service";
+import User from "../models/user.model";
 
 passport.use(
   new GoogleStrategy(
@@ -61,5 +62,21 @@ passport.use(
   )
 );
 
-passport.serializeUser((user: any, done) => done(null, user));
-passport.deserializeUser((user: any, done) => done(null, user));
+// passport.serializeUser((user: any, done) => done(null, user));
+// passport.deserializeUser((user: any, done) => done(null, user));
+
+passport.serializeUser((user: any, done) => {
+  done(null, (user as any)._id); // store only user id in session
+});
+
+passport.deserializeUser(async (id: string, done) => {
+  try {
+    const user = await User.findById(id).select("-password"); 
+    if (!user) {
+      return done(null, false);
+    }
+    done(null, user);
+  } catch (err) {
+    done(err as Error, null);
+  }
+});
