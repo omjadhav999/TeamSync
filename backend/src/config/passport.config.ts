@@ -20,7 +20,7 @@ passport.use(
       scope: ["profile", "email"],
       passReqToCallback: true,
     },
-    async (req: Request, accessToken, refreshToken, profile, done) => {
+    async (req: Request, accessToken: string, refreshToken: string, profile: any, done: Function) => {
       try {
         const { email, sub: googleId, picture } = profile._json;
         console.log(profile, "profile");
